@@ -20,63 +20,6 @@ const categories: Category[] = [
   { name: "Study", color: "#27ae60" },
 ];
 
-const notes = [
-  {
-    title: "Client Meeting Review",
-    category: "Work",
-    categoryColor: "#e74c3c",
-    content:
-      "Lorem Ipsum Dolor Sit Amet, Consetetur Sadipscing Elitr, Sed Diam Nonumy Eirmod Tempor Invidunt Ut Labore Et Dolore Magna Aliquyam Erat, Sed Diam Voluptua. At Vero Eos Et Accusam Et Justo Duo Dolores Et Ea Rebum.",
-    time: "09:38PM",
-    date: "07 January 2021",
-  },
-  {
-    title: "Water Supply Chain Power",
-    category: "Wishlist",
-    categoryColor: "#f39c12",
-    content:
-      "Lorem Ipsum Dolor Sit Amet, Consetetur Sadipscing Elitr, Sed Diam Nonumy Eirmod Tempor Invidunt Ut Labore Et Dolore Magna Aliquyam Erat, Sed Diam Voluptua. At Vero Eos Et Accusam Et Justo Duo Dolores Et Ea Rebum.",
-    time: "02:45AM",
-    date: "22 December 2020",
-  },
-  {
-    title: "Social Media Chat",
-    category: "Assignment",
-    categoryColor: "#2980b9",
-    content:
-      "Lorem Ipsum Dolor Sit Amet, Consetetur Sadipscing Elitr, Sed Diam Nonumy Eirmod Tempor Invidunt Ut Labore Et Dolore Magna Aliquyam Erat, Sed Diam Voluptua. At Vero Eos Et Accusam Et Justo Duo Dolores Et Ea Rebum.",
-    time: "12:23PM",
-    date: "01 January 2021",
-  },
-  {
-    title: "Client Meeting Review",
-    category: "Projects",
-    categoryColor: "#16a085",
-    content:
-      "Lorem Ipsum Dolor Sit Amet, Consetetur Sadipscing Elitr, Sed Diam Nonumy Eirmod Tempor Invidunt Ut Labore Et Dolore Magna Aliquyam Erat, Sed Diam Voluptua. At Vero Eos Et Accusam Et Justo Duo Dolores Et Ea Rebum.",
-    time: "03:50AM",
-    date: "10 September 2020",
-  },
-  {
-    title: "Musical Instruments",
-    category: "Videos",
-    categoryColor: "#8e44ad",
-    content:
-      "Lorem Ipsum Dolor Sit Amet, Consetetur Sadipscing Elitr, Sed Diam Nonumy Eirmod Tempor Invidunt Ut Labore Et Dolore Magna Aliquyam Erat, Sed Diam Voluptua. At Vero Eos Et Accusam Et Justo Duo Dolores Et Ea Rebum.",
-    time: "11:32PM",
-    date: "22 December 2020",
-  },
-  {
-    title: "Media Chapter II",
-    category: "Study",
-    categoryColor: "#27ae60",
-    content:
-      "Lorem Ipsum Dolor Sit Amet, Consetetur Sadipscing Elitr, Sed Diam Nonumy Eirmod Tempor Invidunt Ut Labore Et Dolore Magna Aliquyam Erat, Sed Diam Voluptua. At Vero Eos Et Accusam Et Justo Duo Dolores Et Ea Rebum.",
-    time: "06:25PM",
-    date: "11 September 2020",
-  },
-];
-
 const formatDate = (dateObj: Date) => {
   // Format: 07 January 2021
   const day = dateObj.getDate().toString().padStart(2, '0');
@@ -479,13 +422,23 @@ function SidebarNav({
   );
 }
 
+interface Note {
+  id?: string;
+  title: string;
+  content: string;
+  category: string;
+  categoryColor: string;
+  time: string;
+  date: string;
+}
+
 export default function Dashboard() {
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [showSettings, setShowSettings] = useState(false);
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const [profilePhoto, setProfilePhoto] = useState<string | null>(null);
   const mobileNavRef = useRef<HTMLDivElement>(null);
-  const [notesState, setNotesState] = useState<any[]>([]);
+  const [notesState, setNotesState] = useState<Note[]>([]);
   const [showNewNoteModal, setShowNewNoteModal] = useState(false);
   const [selectedNoteIdx, setSelectedNoteIdx] = useState<number | null>(null);
   const [loading, setLoading] = useState(false);
@@ -509,11 +462,10 @@ export default function Dashboard() {
 
   useEffect(() => {
     fetchNotes();
-    // eslint-disable-next-line
   }, []);
 
   // Add note
-  const handleAddNote = async (note: any) => {
+  const handleAddNote = async (note: Note) => {
     setLoading(true);
     setError(null);
     const { data, error } = await supabase.from('notes').insert([note]).select();
@@ -526,7 +478,7 @@ export default function Dashboard() {
   };
 
   // Edit note
-  const handleEditNote = async (updatedNote: any) => {
+  const handleEditNote = async (updatedNote: Note) => {
     setLoading(true);
     setError(null);
     const { data, error } = await supabase

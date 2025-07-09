@@ -1,7 +1,7 @@
 'use client';
 import React, { useState, useRef, useEffect } from "react";
-import Image from "next/image";
 import {supabase} from '../../lib/supabaseClient'
+import NextImage from "next/image";
 // import { supabase } from '../lib/supabaseClient';
 
 // Define Category type for strong typing
@@ -45,7 +45,7 @@ function NewNoteModal({
 }: {
   open: boolean;
   onClose: () => void;
-  onAddNote: (note: any) => void;
+  onAddNote: (note: Note) => void;
   categories: Category[];
 }) {
   const [title, setTitle] = useState('');
@@ -180,14 +180,14 @@ function EditNoteModal({
 }: {
   open: boolean;
   onClose: () => void;
-  note: any;
+  note: Note | null;
   categories: Category[];
-  onSave: (updatedNote: any) => void;
+  onSave: (updatedNote: Note) => void;
   onDelete: () => void;
 }) {
-  const [title, setTitle] = useState(note?.title || '');
-  const [content, setContent] = useState(note?.content || '');
-  const [category, setCategory] = useState(note?.category || categories[1]?.name || '');
+  const [title, setTitle] = useState('');
+  const [content, setContent] = useState('');
+  const [category, setCategory] = useState(categories[1]?.name || '');
   const [error, setError] = useState('');
   const modalRef = useRef<HTMLDivElement>(null);
 
@@ -197,8 +197,13 @@ function EditNoteModal({
       setContent(note.content);
       setCategory(note.category);
       setError('');
+    } else if (open) {
+      setTitle('');
+      setContent('');
+      setCategory(categories[1]?.name || '');
+      setError('');
     }
-  }, [open, note]);
+  }, [open, note, categories]);
 
   useEffect(() => {
     if (!open) return;
@@ -361,7 +366,7 @@ function SidebarNav({
     <>
       <div className="flex flex-col items-center gap-2">
         <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-[#1CB5E0] bg-[#22223a]">
-          <Image src="/next.svg" alt="User avatar" width={64} height={64} />
+          {/* <Image src="/next.svg" alt="User avatar" width={64} height={64} /> */}
         </div>
         <span className="text-lg font-bold mt-2">Steve Dean</span>
       </div>
@@ -640,9 +645,9 @@ export default function Dashboard() {
           categories={categories}
         />
         <EditNoteModal
-          open={selectedNoteIdx !== null}
+          open={selectedNoteIdx !== null && filteredNotes[selectedNoteIdx] !== undefined}
           onClose={() => setSelectedNoteIdx(null)}
-          note={selectedNoteIdx !== null ? filteredNotes[selectedNoteIdx] : null}
+          note={selectedNoteIdx !== null && filteredNotes[selectedNoteIdx] !== undefined ? filteredNotes[selectedNoteIdx] : null}
           categories={categories}
           onSave={handleEditNote}
           onDelete={() => {
@@ -670,9 +675,9 @@ export default function Dashboard() {
               <div className="flex flex-col items-center gap-4 mb-6">
                 <div className="w-20 h-20 rounded-full overflow-hidden border-2 border-[#1CB5E0] bg-[#22223a]">
                   {profilePhoto ? (
-                    <Image src={profilePhoto} alt="Profile preview" width={80} height={80} />
+                    <NextImage src={profilePhoto} alt="Profile preview" width={80} height={80} />
                   ) : (
-                    <Image src="/next.svg" alt="Profile preview" width={80} height={80} />
+                    <NextImage src="/next.svg" alt="Profile preview" width={80} height={80} />
                   )}
                 </div>
                 <label htmlFor="profile-photo-upload" className="block text-sm font-medium text-gray-200 cursor-pointer">

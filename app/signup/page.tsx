@@ -1,5 +1,3 @@
-import Image from "next/image";
-
 export default function Signup() {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-[#111118] px-4 py-10 font-[family-name:var(--font-geist-sans)]">

@@ -20,7 +20,41 @@
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: #111118;
+  color: #fff;
+  font-family: var(--font-geist-sans, Inter, Arial, sans-serif);
+  margin: 0;
+  padding: 0;
+}
+
+.bg-gradient-to-r {
+  background-image: linear-gradient(90deg, #1CB5E0 0%, #000851 100%);
+}
+
+.text-transparent {
+  color: transparent;
+}
+
+.bg-clip-text {
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+@media (max-width: 640px) {
+  h1 {
+    font-size: 2rem;
+  }
+  .aspect-video {
+    aspect-ratio: 16/9;
+    min-height: 180px;
+  }
+}
+
+@media (max-width: 400px) {
+  h1 {
+    font-size: 1.5rem;
+  }
+  .aspect-video {
+    min-height: 120px;
+  }
 }
